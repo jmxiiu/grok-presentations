@@ -8,7 +8,7 @@
 <style>
   :root {
     --bg:#0b1220; --panel:#121a2b; --text:#e8eefc; --muted:#9bb0d0; --accent:#3b82f6;
-    --pos:#22c55e; --neg:#ef4444; --border:#243047;
+    --pos:#22c55e; --neg:#ef4444; --flat:#94a3b8; --border:#243047;
   }
   * { box-sizing: border-box; }
   body {
@@ -28,7 +28,12 @@
   }
   .card .label { color:var(--muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:.04em; }
   .card .value { font-size:1.45rem; font-weight:700; margin-top:6px; }
-  .pos { color:var(--pos); } .neg { color:var(--neg); }
+  .pos { color:var(--pos) !important; }
+  .neg { color:var(--neg) !important; }
+  .flat { color:var(--flat) !important; }
+  .bg-pos { background: rgba(34,197,94,0.14); }
+  .bg-neg { background: rgba(239,68,68,0.14); }
+  .bg-flat { background: rgba(148,163,184,0.12); }
   .charts { display:grid; grid-template-columns: 1.4fr 1fr; gap:14px; margin-bottom:14px; }
   .chart-card { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; }
   .chart-card h2 { margin:0 0 12px; font-size:1.05rem; }
@@ -36,7 +41,8 @@
   table { width:100%; border-collapse:collapse; font-size:0.92rem; }
   th, td { padding:10px 12px; border-bottom:1px solid var(--border); text-align:right; }
   th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align:left; }
-  th { color:var(--muted); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:.03em; }
+  th { color:var(--muted); font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:.03em; }
+  td.signed { font-weight:600; }
   .veoe {
     display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin-top:12px;
   }
@@ -45,16 +51,25 @@
   }
   .veoe .pill .k { color:var(--muted); font-size:0.78rem; }
   .veoe .pill .v { font-size:1.1rem; font-weight:700; margin-top:4px; }
+  .legend-row { display:flex; gap:14px; flex-wrap:wrap; margin: 0 0 12px; font-size:0.82rem; color:var(--muted); }
+  .legend-row span i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; }
   footer { margin-top:18px; color:var(--muted); font-size:0.8rem; }
   @media (max-width: 980px) {
     .grid { grid-template-columns:1fr 1fr; }
     .charts { grid-template-columns:1fr; }
+    .veoe { grid-template-columns:1fr 1fr; }
   }
 </style>
 </head>
 <body>
   <h1>Barron's Close Follow Portfolio <span class="badge">MOCK / PAPER ONLY — NOT REAL TRADES</span></h1>
   <div class="sub">Jim's mock Barron's Investor Circle close-follow book · Total contributed $600,000 · As of <strong id="asof"></strong> (America/Los_Angeles)</div>
+
+  <div class="legend-row">
+    <span><i style="background:#22c55e"></i>Green = positive / gain</span>
+    <span><i style="background:#ef4444"></i>Red = negative / loss</span>
+    <span><i style="background:#94a3b8"></i>Gray = flat / unchanged</span>
+  </div>
 
   <div class="grid">
     <div class="card"><div class="label">Total value</div><div class="value" id="totalValue"></div></div>
@@ -86,7 +101,7 @@
   </div>
 
   <div class="chart-card" style="margin-bottom:14px">
-    <h2>VEOEY targets &amp; support</h2>
+    <h2>VEOEY targets & support</h2>
     <div class="veoe" id="veoePanel"></div>
   </div>
 
@@ -97,21 +112,23 @@
         <thead>
           <tr>
             <th>Ticker</th><th>Name</th><th>Shares</th><th>Entry</th><th>Entry date</th>
-            <th>Latest close</th><th>Value</th><th>Gain $</th><th>Gain %</th>
+            <th>Latest close</th><th>Day chg</th><th>Day chg %</th>
+            <th>Value</th><th>Gain $</th><th>Gain %</th>
           </tr>
         </thead>
         <tbody></tbody>
+        <tfoot></tfoot>
       </table>
     </div>
   </div>
 
   <footer>
-    Prices from Yahoo Finance daily bars (opens/closes). Entry prices and share counts from the mock portfolio ledger.
-    Paper portfolio only — no live brokerage orders. Cash leftovers included in each position's value.
+    Prices as of 2026-11-05 close (America/Los_Angeles). Entry prices and share counts from the mock portfolio ledger.
+    Paper portfolio only — no live brokerage orders. Portfolio cash leftovers total $328.47 (included in total value).
   </footer>
 
 <script>
-const DATA = {"asof": "2026-11-05", "positions_meta": [{"ticker": "VEOEY", "name": "Veolia Environnement ADR", "entry_date": "2026-10-20", "shares": 5558, "entry_price": 17.99, "cost": 99988.42, "cash": 11.58, "entry_type": "close"}, {"ticker": "EL", "name": "Est\u00e9e Lauder", "entry_date": "2026-10-21", "shares": 964, "entry_price": 103.66, "cost": 99928.24, "cash": 71.76, "entry_type": "close"}, {"ticker": "IBEX", "name": "IBEX Limited", "entry_date": "2026-10-27", "shares": 2176, "entry_price": 45.94, "cost": 99965.44, "cash": 34.56, "entry_type": "close"}, {"ticker": "EQX", "name": "Equinox Gold", "entry_date": "2026-10-29", "shares": 9842, "entry_price": 10.16, "cost": 99994.72, "cash": 5.28, "entry_type": "open"}, {"ticker": "UCTT", "name": "Ultra Clean Holdings", "entry_date": "2026-11-04", "shares": 2093, "entry_price": 47.76, "cost": 99961.68, "cash": 38.32, "entry_type": "open"}, {"ticker": "RMD", "name": "ResMed", "entry_date": "2026-11-05", "shares": 407, "entry_price": 245.29, "cost": 99833.03, "cash": 166.97, "entry_type": "open"}], "history": [{"date": "2026-10-20", "contrib": 100000, "total": 100000.0, "positions": {"VEOEY": {"close": 17.99, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}}}, {"date": "2026-10-21", "contrib": 200000, "total": 199555.36, "positions": {"VEOEY": {"close": 17.91, "value": 99555.36, "gain": -444.64, "gain_pct": -0.44}, "EL": {"close": 103.66, "value": 100000.0, "gain": 0.0, "gain_pct": 0.0}}}, {"date": "2026-10-22", "contrib": 200000, "total": 203691.53, "positions": {"VEOEY": {"close": 17.95, "value": 99777.68, "gain": -222.32, "gain_pct": -0.22}, "EL": {"close": 107.72, "value": 103913.84, "gain": 3913.84, "gain_pct": 3.91}}}, {"date": "2026-10-23", "contrib": 200000, "total": 204829.64, "positions": {"VEOEY": {"close": 17.99, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}, "EL": {"close": 108.67, "value": 104829.64, "gain": 4829.64, "gain_pct": 4.83}}}, {"date": "2026-10-26", "contrib": 200000, "total": 205696.78, "positions": {"VEOEY": {"close": 18.12, "value": 100722.54, "gain": 722.54, "gain_pct": 0.72}, "EL": {"close": 108.82, "value": 104974.24, "gain": 4974.24, "gain_pct": 4.97}}}, {"date": "2026-10-27", "contrib": 300000, "total": 306021.82, "positions": {"VEOEY": {"close": 18.26, "value": 101500.66, "gain": 1500.66, "gain_pct": 1.5}, "EL": {"close": 108.35, "value": 104521.16, "gain": 4521.16, "gain_pct": 4.52}, "IBEX": {"close": 45.94, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}}}, {"date": "2026-10-28", "contrib": 300000, "total": 306260.64, "positions": {"VEOEY": {"close": 18.25, "value": 101445.08, "gain": 1445.08, "gain_pct": 1.45}, "EL": {"close": 109.31, "value": 105446.6, "gain": 5446.6, "gain_pct": 5.45}, "IBEX": {"close": 45.65, "value": 99368.96, "gain": -631.04, "gain_pct": -0.63}}}, {"date": "2026-10-29", "contrib": 400000, "total": 406045.21, "positions": {"VEOEY": {"close": 18.38, "value": 102167.62, "gain": 2167.62, "gain_pct": 2.17}, "EL": {"close": 108.81, "value": 104964.6, "gain": 4964.6, "gain_pct": 4.96}, "IBEX": {"close": 45.35, "value": 98716.16, "gain": -1283.84, "gain_pct": -1.28}, "EQX": {"close": 10.18, "value": 100196.84, "gain": 196.84, "gain_pct": 0.2}}}, {"date": "2026-10-30", "contrib": 400000, "total": 400487.98, "positions": {"VEOEY": {"close": 18.4, "value": 102278.78, "gain": 2278.78, "gain_pct": 2.28}, "EL": {"close": 109.23, "value": 105369.48, "gain": 5369.48, "gain_pct": 5.37}, "IBEX": {"close": 44.73, "value": 97367.04, "gain": -2632.96, "gain_pct": -2.63}, "EQX": {"close": 9.7, "value": 95472.68, "gain": -4527.32, "gain_pct": -4.53}}}, {"date": "2026-11-02", "contrib": 400000, "total": 400573.7, "positions": {"VEOEY": {"close": 18.52, "value": 102945.74, "gain": 2945.74, "gain_pct": 2.95}, "EL": {"close": 104.77, "value": 101070.04, "gain": 1070.04, "gain_pct": 1.07}, "IBEX": {"close": 44.72, "value": 97345.28, "gain": -2654.72, "gain_pct": -2.65}, "EQX": {"close": 10.08, "value": 99212.64, "gain": -787.36, "gain_pct": -0.79}}}, {"date": "2026-11-03", "contrib": 400000, "total": 399042.5, "positions": {"VEOEY": {"close": 18.4, "value": 102278.78, "gain": 2278.78, "gain_pct": 2.28}, "EL": {"close": 105.39, "value": 101667.72, "gain": 1667.72, "gain_pct": 1.67}, "IBEX": {"close": 44.41, "value": 96670.72, "gain": -3329.28, "gain_pct": -3.33}, "EQX": {"close": 10.0, "value": 98425.28, "gain": -1574.72, "gain_pct": -1.57}}}, {"date": "2026-11-04", "contrib": 500000, "total": 515008.86, "positions": {"VEOEY": {"close": 19.14, "value": 106391.7, "gain": 6391.7, "gain_pct": 6.39}, "EL": {"close": 112.04, "value": 108078.32, "gain": 8078.32, "gain_pct": 8.08}, "IBEX": {"close": 44.7, "value": 97301.76, "gain": -2698.24, "gain_pct": -2.7}, "EQX": {"close": 11.28, "value": 111023.04, "gain": 11023.04, "gain_pct": 11.02}, "UCTT": {"close": 44.04, "value": 92214.04, "gain": -7785.96, "gain_pct": -7.79}}}, {"date": "2026-11-05", "contrib": 600000, "total": 590907.82, "positions": {"VEOEY": {"close": 19.04, "value": 105835.91, "gain": 5835.91, "gain_pct": 5.84}, "EL": {"close": 109.03, "value": 105176.68, "gain": 5176.68, "gain_pct": 5.18}, "IBEX": {"close": 43.31, "value": 94277.12, "gain": -5722.88, "gain_pct": -5.72}, "EQX": {"close": 11.105, "value": 109300.69, "gain": 9300.69, "gain_pct": 9.3}, "UCTT": {"close": 38.37, "value": 80346.73, "gain": -19653.27, "gain_pct": -19.65}, "RMD": {"close": 235.39, "value": 95970.7, "gain": -4029.3, "gain_pct": -4.03}}}], "latest": {"total": 590907.82, "contrib": 600000, "gain": -9092.18, "gain_pct": -1.52, "positions": {"VEOEY": {"close": 19.04, "value": 105835.9051, "shares": 5558, "entry": 17.99, "cost": 99988.42, "cash": 11.58, "gain": 5835.9051, "gain_pct": 5.8359}, "EL": {"close": 109.03, "value": 105176.6788, "shares": 964, "entry": 103.66, "cost": 99928.24, "cash": 71.76, "gain": 5176.6788, "gain_pct": 5.1767}, "IBEX": {"close": 43.31, "value": 94277.123, "shares": 2176, "entry": 45.94, "cost": 99965.44, "cash": 34.56, "gain": -5722.877, "gain_pct": -5.7229}, "EQX": {"close": 11.105, "value": 109300.6855, "shares": 9842, "entry": 10.16, "cost": 99994.72, "cash": 5.28, "gain": 9300.6855, "gain_pct": 9.3007}, "UCTT": {"close": 38.37, "value": 80346.7278, "shares": 2093, "entry": 47.76, "cost": 99961.68, "cash": 38.32, "gain": -19653.2722, "gain_pct": -19.6533}, "RMD": {"close": 235.39, "value": 95970.6998, "shares": 407, "entry": 245.29, "cost": 99833.03, "cash": 166.97, "gain": -4029.3002, "gain_pct": -4.0293}}}, "veoe_targets": {"target_high": 29, "target_mid": 21, "support": 17, "close": 19.04}};
+const DATA = {"asof": "2026-11-05", "positions_meta": [{"ticker": "VEOEY", "name": "Veolia Environnement ADR", "entry_date": "2026-10-20", "shares": 5558, "entry_price": 17.99, "cost": 99988.42, "cash": 11.58, "entry_type": "close"}, {"ticker": "EL", "name": "Est\u00e9e Lauder", "entry_date": "2026-10-21", "shares": 964, "entry_price": 103.66, "cost": 99928.24, "cash": 71.76, "entry_type": "close"}, {"ticker": "IBEX", "name": "IBEX Limited", "entry_date": "2026-10-27", "shares": 2176, "entry_price": 45.94, "cost": 99965.44, "cash": 34.56, "entry_type": "close"}, {"ticker": "EQX", "name": "Equinox Gold", "entry_date": "2026-10-29", "shares": 9842, "entry_price": 10.16, "cost": 99994.72, "cash": 5.28, "entry_type": "open"}, {"ticker": "UCTT", "name": "Ultra Clean Holdings", "entry_date": "2026-11-04", "shares": 2093, "entry_price": 47.76, "cost": 99961.68, "cash": 38.32, "entry_type": "open"}, {"ticker": "RMD", "name": "ResMed", "entry_date": "2026-11-05", "shares": 407, "entry_price": 245.29, "cost": 99833.03, "cash": 166.97, "entry_type": "open"}], "history": [{"date": "2026-10-20", "contrib": 100000, "total": 100000.0, "positions": {"VEOEY": {"close": 17.99, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}}}, {"date": "2026-10-21", "contrib": 200000, "total": 199555.36, "positions": {"VEOEY": {"close": 17.91, "value": 99555.36, "gain": -444.64, "gain_pct": -0.44}, "EL": {"close": 103.66, "value": 100000.0, "gain": 0.0, "gain_pct": 0.0}}}, {"date": "2026-10-22", "contrib": 200000, "total": 203691.53, "positions": {"VEOEY": {"close": 17.95, "value": 99777.68, "gain": -222.32, "gain_pct": -0.22}, "EL": {"close": 107.72, "value": 103913.84, "gain": 3913.84, "gain_pct": 3.91}}}, {"date": "2026-10-23", "contrib": 200000, "total": 204829.64, "positions": {"VEOEY": {"close": 17.99, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}, "EL": {"close": 108.67, "value": 104829.64, "gain": 4829.64, "gain_pct": 4.83}}}, {"date": "2026-10-26", "contrib": 200000, "total": 205696.78, "positions": {"VEOEY": {"close": 18.12, "value": 100722.54, "gain": 722.54, "gain_pct": 0.72}, "EL": {"close": 108.82, "value": 104974.24, "gain": 4974.24, "gain_pct": 4.97}}}, {"date": "2026-10-27", "contrib": 300000, "total": 306021.82, "positions": {"VEOEY": {"close": 18.26, "value": 101500.66, "gain": 1500.66, "gain_pct": 1.5}, "EL": {"close": 108.35, "value": 104521.16, "gain": 4521.16, "gain_pct": 4.52}, "IBEX": {"close": 45.94, "value": 100000.0, "gain": -0.0, "gain_pct": -0.0}}}, {"date": "2026-10-28", "contrib": 300000, "total": 306260.64, "positions": {"VEOEY": {"close": 18.25, "value": 101445.08, "gain": 1445.08, "gain_pct": 1.45}, "EL": {"close": 109.31, "value": 105446.6, "gain": 5446.6, "gain_pct": 5.45}, "IBEX": {"close": 45.65, "value": 99368.96, "gain": -631.04, "gain_pct": -0.63}}}, {"date": "2026-10-29", "contrib": 400000, "total": 406045.21, "positions": {"VEOEY": {"close": 18.38, "value": 102167.62, "gain": 2167.62, "gain_pct": 2.17}, "EL": {"close": 108.81, "value": 104964.6, "gain": 4964.6, "gain_pct": 4.96}, "IBEX": {"close": 45.35, "value": 98716.16, "gain": -1283.84, "gain_pct": -1.28}, "EQX": {"close": 10.18, "value": 100196.84, "gain": 196.84, "gain_pct": 0.2}}}, {"date": "2026-10-30", "contrib": 400000, "total": 400487.98, "positions": {"VEOEY": {"close": 18.4, "value": 102278.78, "gain": 2278.78, "gain_pct": 2.28}, "EL": {"close": 109.23, "value": 105369.48, "gain": 5369.48, "gain_pct": 5.37}, "IBEX": {"close": 44.73, "value": 97367.04, "gain": -2632.96, "gain_pct": -2.63}, "EQX": {"close": 9.7, "value": 95472.68, "gain": -4527.32, "gain_pct": -4.53}}}, {"date": "2026-11-02", "contrib": 400000, "total": 400573.7, "positions": {"VEOEY": {"close": 18.52, "value": 102945.74, "gain": 2945.74, "gain_pct": 2.95}, "EL": {"close": 104.77, "value": 101070.04, "gain": 1070.04, "gain_pct": 1.07}, "IBEX": {"close": 44.72, "value": 97345.28, "gain": -2654.72, "gain_pct": -2.65}, "EQX": {"close": 10.08, "value": 99212.64, "gain": -787.36, "gain_pct": -0.79}}}, {"date": "2026-11-03", "contrib": 400000, "total": 399042.5, "positions": {"VEOEY": {"close": 18.4, "value": 102278.78, "gain": 2278.78, "gain_pct": 2.28}, "EL": {"close": 105.39, "value": 101667.72, "gain": 1667.72, "gain_pct": 1.67}, "IBEX": {"close": 44.41, "value": 96670.72, "gain": -3329.28, "gain_pct": -3.33}, "EQX": {"close": 10.0, "value": 98425.28, "gain": -1574.72, "gain_pct": -1.57}}}, {"date": "2026-11-04", "contrib": 500000, "total": 515008.86, "positions": {"VEOEY": {"close": 19.14, "value": 106391.7, "gain": 6391.7, "gain_pct": 6.39}, "EL": {"close": 112.04, "value": 108078.32, "gain": 8078.32, "gain_pct": 8.08}, "IBEX": {"close": 44.7, "value": 97301.76, "gain": -2698.24, "gain_pct": -2.7}, "EQX": {"close": 11.28, "value": 111023.04, "gain": 11023.04, "gain_pct": 11.02}, "UCTT": {"close": 44.04, "value": 92214.04, "gain": -7785.96, "gain_pct": -7.79}}}, {"date": "2026-11-05", "contrib": 600000.0, "total": 589438.44, "cash": 328.47, "positions": {"VEOEY": {"close": 18.98, "value": 105490.84, "gain": 5502.42, "gain_pct": 5.5, "day_chg": -0.16, "day_chg_pct": -0.84}, "EL": {"close": 107.65, "value": 103774.6, "gain": 3846.36, "gain_pct": 3.85, "day_chg": -4.39, "day_chg_pct": -3.92}, "IBEX": {"close": 43.0, "value": 93568.0, "gain": -6397.44, "gain_pct": -6.4, "day_chg": -1.7, "day_chg_pct": -3.8}, "EQX": {"close": 11.28, "value": 111017.76, "gain": 11023.04, "gain_pct": 11.02, "day_chg": 0.0, "day_chg_pct": 0.0}, "UCTT": {"close": 37.2, "value": 77859.6, "gain": -22102.08, "gain_pct": -22.11, "day_chg": -6.84, "day_chg_pct": -15.53}, "RMD": {"close": 239.31, "value": 97399.17, "gain": -2433.86, "gain_pct": -2.44, "day_chg": -1.2, "day_chg_pct": -0.5}}}], "cash_total": 328.47, "latest": {"total": 589438.44, "contrib": 600000.0, "gain": -10561.56, "gain_pct": -1.76, "cash": 328.47, "positions": {"VEOEY": {"close": 18.98, "day_chg": -0.16, "day_chg_pct": -0.84, "value": 105490.84, "gain": 5502.42, "gain_pct": 5.5}, "EL": {"close": 107.65, "day_chg": -4.39, "day_chg_pct": -3.92, "value": 103774.6, "gain": 3846.36, "gain_pct": 3.85}, "IBEX": {"close": 43.0, "day_chg": -1.7, "day_chg_pct": -3.8, "value": 93568.0, "gain": -6397.44, "gain_pct": -6.4}, "EQX": {"close": 11.28, "day_chg": 0.0, "day_chg_pct": 0.0, "value": 111017.76, "gain": 11023.04, "gain_pct": 11.02}, "UCTT": {"close": 37.2, "day_chg": -6.84, "day_chg_pct": -15.53, "value": 77859.6, "gain": -22102.08, "gain_pct": -22.11}, "RMD": {"close": 239.31, "day_chg": -1.2, "day_chg_pct": -0.5, "value": 97399.17, "gain": -2433.86, "gain_pct": -2.44}}}, "veoe_targets": {"target_high": 29, "target_mid": 21, "support": 17, "close": 18.98}};
 const COLORS = {"VEOEY": "#2563eb", "EL": "#db2777", "IBEX": "#7c3aed", "EQX": "#ca8a04", "UCTT": "#ea580c", "RMD": "#0891b2"};
 const NAMES = {"VEOEY": "Veolia Environnement ADR", "EL": "Est\u00e9e Lauder", "IBEX": "IBEX Limited", "EQX": "Equinox Gold", "UCTT": "Ultra Clean Holdings", "RMD": "ResMed"};
 
@@ -119,8 +136,27 @@ function fmtMoney(n) {
   return n.toLocaleString('en-US', {style:'currency', currency:'USD'});
 }
 function fmtPct(n) {
-  const s = (n>=0?'+':'') + n.toFixed(2) + '%';
-  return s;
+  if (Math.abs(n) < 0.0005) return '0.00%';
+  return (n>=0?'+':'') + n.toFixed(2) + '%';
+}
+function fmtChg(n) {
+  if (Math.abs(n) < 0.0000001) return '0.00';
+  return (n>=0?'+':'') + n.toFixed(2);
+}
+function signClass(n) {
+  if (n > 0.0000001) return 'pos';
+  if (n < -0.0000001) return 'neg';
+  return 'flat';
+}
+function bgClass(n) {
+  if (n > 0.0000001) return 'bg-pos';
+  if (n < -0.0000001) return 'bg-neg';
+  return 'bg-flat';
+}
+function barColor(n) {
+  if (n > 0.0000001) return '#22c55e';
+  if (n < -0.0000001) return '#ef4444';
+  return '#94a3b8';
 }
 
 const latest = DATA.latest;
@@ -128,32 +164,30 @@ document.getElementById('asof').textContent = DATA.asof;
 document.getElementById('totalValue').textContent = fmtMoney(latest.total);
 const gainEl = document.getElementById('totalGain');
 gainEl.textContent = fmtMoney(latest.gain) + ' (' + fmtPct(latest.gain_pct) + ')';
-gainEl.className = 'value ' + (latest.gain >= 0 ? 'pos' : 'neg');
+gainEl.className = 'value ' + signClass(latest.gain);
 
 const ranked = Object.entries(latest.positions).sort((a,b)=>b[1].gain_pct - a[1].gain_pct);
-document.getElementById('bestPos').innerHTML = ranked[0][0] + ' <span class="pos">' + fmtPct(ranked[0][1].gain_pct) + '</span>';
-document.getElementById('worstPos').innerHTML = ranked[ranked.length-1][0] + ' <span class="neg">' + fmtPct(ranked[ranked.length-1][1].gain_pct) + '</span>';
+document.getElementById('bestPos').innerHTML = ranked[0][0] + ' <span class="' + signClass(ranked[0][1].gain_pct) + '">' + fmtPct(ranked[0][1].gain_pct) + '</span>';
+document.getElementById('worstPos').innerHTML = ranked[ranked.length-1][0] + ' <span class="' + signClass(ranked[ranked.length-1][1].gain_pct) + '">' + fmtPct(ranked[ranked.length-1][1].gain_pct) + '</span>';
 
-// VEOEY panel
 const ve = DATA.veoe_targets;
 const veClose = ve.close;
+const veDay = latest.positions.VEOEY;
 document.getElementById('veoePanel').innerHTML = `
-  <div class="pill"><div class="k">Latest close</div><div class="v">${fmtMoney(veClose)}</div></div>
+  <div class="pill"><div class="k">Latest close</div><div class="v">${fmtMoney(veClose)} <span class="${signClass(veDay.day_chg)}">${fmtChg(veDay.day_chg)} (${fmtPct(veDay.day_chg_pct)})</span></div></div>
   <div class="pill"><div class="k">To $29 target</div><div class="v">${(29-veClose).toFixed(2)} (${((29/veClose-1)*100).toFixed(1)}% upside)</div></div>
   <div class="pill"><div class="k">To $21 target</div><div class="v">${(21-veClose).toFixed(2)} (${((21/veClose-1)*100).toFixed(1)}% upside)</div></div>
-  <div class="pill"><div class="k">Above $17 support</div><div class="v">+${(veClose-17).toFixed(2)} (${((veClose/17-1)*100).toFixed(1)}% above)</div></div>
+  <div class="pill"><div class="k">Above $17 support</div><div class="v pos">+${(veClose-17).toFixed(2)} (${((veClose/17-1)*100).toFixed(1)}% above)</div></div>
   <div class="pill"><div class="k">Shares / entry</div><div class="v">5,558 @ $17.99 (Oct 20 close)</div></div>
-  <div class="pill"><div class="k">Position value</div><div class="v">${fmtMoney(latest.positions.VEOEY.value)} · ${fmtPct(latest.positions.VEOEY.gain_pct)}</div></div>
+  <div class="pill"><div class="k">Position value / since entry</div><div class="v">${fmtMoney(veDay.value)} · <span class="${signClass(veDay.gain_pct)}">${fmtPct(veDay.gain_pct)}</span></div></div>
 `;
 
-// Summary table
 const metaByT = Object.fromEntries(DATA.positions_meta.map(p=>[p.ticker,p]));
 const tbody = document.querySelector('#summaryTable tbody');
 for (const t of Object.keys(NAMES)) {
   const m = metaByT[t];
   const p = latest.positions[t];
   const tr = document.createElement('tr');
-  const cls = p.gain >= 0 ? 'pos' : 'neg';
   tr.innerHTML = `
     <td><strong>${t}</strong></td>
     <td>${NAMES[t]}</td>
@@ -161,12 +195,27 @@ for (const t of Object.keys(NAMES)) {
     <td>$${Number(m.entry_price).toFixed(2)} (${m.entry_type})</td>
     <td>${m.entry_date}</td>
     <td>$${Number(p.close).toFixed(2)}</td>
+    <td class="signed ${signClass(p.day_chg)} ${bgClass(p.day_chg)}">${fmtChg(p.day_chg)}</td>
+    <td class="signed ${signClass(p.day_chg_pct)} ${bgClass(p.day_chg_pct)}">${fmtPct(p.day_chg_pct)}</td>
     <td>${fmtMoney(p.value)}</td>
-    <td class="${cls}">${fmtMoney(p.gain)}</td>
-    <td class="${cls}">${fmtPct(p.gain_pct)}</td>
+    <td class="signed ${signClass(p.gain)} ${bgClass(p.gain)}">${fmtMoney(p.gain)}</td>
+    <td class="signed ${signClass(p.gain_pct)} ${bgClass(p.gain_pct)}">${fmtPct(p.gain_pct)}</td>
   `;
   tbody.appendChild(tr);
 }
+document.querySelector('#summaryTable tfoot').innerHTML = `
+  <tr>
+    <td colspan="8" style="text-align:left;color:var(--muted)">Cash leftovers (all positions)</td>
+    <td>${fmtMoney(latest.cash)}</td>
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td colspan="8" style="text-align:left"><strong>Portfolio total</strong></td>
+    <td><strong>${fmtMoney(latest.total)}</strong></td>
+    <td class="signed ${signClass(latest.gain)} ${bgClass(latest.gain)}"><strong>${fmtMoney(latest.gain)}</strong></td>
+    <td class="signed ${signClass(latest.gain_pct)} ${bgClass(latest.gain_pct)}"><strong>${fmtPct(latest.gain_pct)}</strong></td>
+  </tr>
+`;
 
 const labels = DATA.history.map(h=>h.date);
 const totals = DATA.history.map(h=>h.total);
@@ -244,7 +293,9 @@ new Chart(document.getElementById('barChart'), {
     datasets: [{
       label: 'Gain/Loss %',
       data: barVals,
-      backgroundColor: barVals.map(v => v>=0 ? '#22c55e' : '#ef4444')
+      backgroundColor: barVals.map(barColor),
+      borderColor: barVals.map(barColor),
+      borderWidth: 1
     }]
   },
   options: {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crazy Tank Aiming Calculator</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; max-width: 500px; margin: auto; background: #f5f5f7; }
+h1 { text-align: center; color: #1F4E79; }
+.input-group { margin: 20px 0; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+label { display: block; font-weight: bold; margin-bottom: 8px; }
+.value { font-size: 28px; font-weight: bold; text-align: center; margin: 10px 0; }
+.buttons { display: flex; justify-content: center; gap: 20px; }
+button { font-size: 24px; padding: 12px 24px; border: none; border-radius: 8px; background: #1F4E79; color: white; cursor: pointer; }
+button:active { background: #163a5f; }
+.direction { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+.direction button { background: #ddd; color: #333; }
+.direction button.active { background: #1F4E79; color: white; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 12px; overflow: hidden; }
+th, td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
+th { background: #1F4E79; color: white; }
+.rec { margin-top: 20px; padding: 15px; background: #FFEB9C; border-radius: 12px; font-weight: bold; text-align: center; }
+</style>
+</head>
+<body>
+<h1>Crazy Tank Calculator</h1>
+
+<div class="input-group">
+  <label>Target Distance (mm)</label>
+  <div class="value" id="targetDisplay">44</div>
+  <div class="buttons">
+    <button onclick="changeTarget(-1)">−</button>
+    <button onclick="changeTarget(1)">+</button>
+  </div>
+</div>
+
+<div class="input-group">
+  <label>Wind Strength</label>
+  <div class="value" id="windDisplay">2</div>
+  <div class="buttons">
+    <button onclick="changeWind(-1)">−</button>
+    <button onclick="changeWind(1)">+</button>
+  </div>
+  <div class="direction">
+    <button id="withBtn" class="active" onclick="setDirection(1)">With You (+)</button>
+    <button id="againstBtn" onclick="setDirection(-1)">Against (–)</button>
+  </div>
+</div>
+
+<table id="results">
+  <tr><th>Force</th><th>Angle</th><th>Tweak</th></tr>
+  <tr><td>Full</td><td id="fullAngle">-</td><td id="fullTweak">-</td></tr>
+  <tr><td>Medium</td><td id="medAngle">-</td><td id="medTweak">-</td></tr>
+  <tr><td>Small</td><td id="smallAngle">-</td><td id="smallTweak">-</td></tr>
+</table>
+
+<div class="rec" id="recommendation">Recommended: ...</div>
+
+<script>
+let target = 44;
+let windAbs = 2;
+let direction = 1; // 1 = with, -1 = against
+
+function updateDisplay() {
+  document.getElementById('targetDisplay').textContent = target;
+  document.getElementById('windDisplay').textContent = windAbs;
+  calculate();
+}
+
+function changeTarget(delta) {
+  target = Math.max(0, target + delta);
+  updateDisplay();
+}
+
+function changeWind(delta) {
+  windAbs = Math.max(0, Math.min(21, windAbs + delta));
+  updateDisplay();
+}
+
+function setDirection(dir) {
+  direction = dir;
+  document.getElementById('withBtn').classList.toggle('active', dir === 1);
+  document.getElementById('againstBtn').classList.toggle('active', dir === -1);
+  calculate();
+}
+
+function calculate() {
+  const units = target / 4.8;
+  const signedWind = windAbs * direction;
+  const forces = [
+    { name: 'Full', dpu: 1, id: 'full' },
+    { name: 'Medium', dpu: 2, id: 'med' },
+    { name: 'Small', dpu: 3, id: 'small' }
+  ];
+
+  forces.forEach(f => {
+    const precise = 90 - (units * f.dpu) + signedWind;
+    const integer = Math.floor(precise);
+    const tweak = Math.abs(precise - integer) < 0.01 ? 'Exact' : 'LOW';
+    document.getElementById(f.id + 'Angle').textContent = integer + '°';
+    document.getElementById(f.id + 'Tweak').textContent = tweak;
+  });
+
+  // Recommendation logic
+  let preferred = 'Small';
+  if (target > 96) preferred = 'Full';
+  else if (target > 48) preferred = 'Medium';
+  if (direction === -1 && windAbs > 10 && target <= 48) preferred = 'Medium'; // strong headwind
+
+  const preferredId = preferred.toLowerCase() === 'full' ? 'full' : preferred.toLowerCase() === 'medium' ? 'med' : 'small';
+  const angle = document.getElementById(preferredId + 'Angle').textContent;
+  const tweak = document.getElementById(preferredId + 'Tweak').textContent;
+  document.getElementById('recommendation').textContent = `Recommended: ${preferred} Force ${angle} (${tweak})`;
+}
+
+updateDisplay();
+</script>
+</body>
+</html>

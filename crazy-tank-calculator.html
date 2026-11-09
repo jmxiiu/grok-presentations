@@ -6,20 +6,20 @@
 <title>Crazy Tank Aiming Calculator</title>
 <style>
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; max-width: 500px; margin: auto; background: #f5f5f7; }
-h1 { text-align: center; color: #1F4E79; }
-.input-group { margin: 20px 0; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-label { display: block; font-weight: bold; margin-bottom: 8px; }
-.value { font-size: 28px; font-weight: bold; text-align: center; margin: 10px 0; }
-.buttons { display: flex; justify-content: center; gap: 20px; }
-button { font-size: 24px; padding: 12px 24px; border: none; border-radius: 8px; background: #1F4E79; color: white; cursor: pointer; }
+h1 { text-align: center; color: #1F4E79; font-size: 22px; }
+.input-group { margin: 15px 0; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; }
+.value { font-size: 32px; font-weight: bold; text-align: center; margin: 10px 0; }
+.buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+button { font-size: 18px; padding: 10px 16px; border: none; border-radius: 8px; background: #1F4E79; color: white; cursor: pointer; min-width: 60px; }
 button:active { background: #163a5f; }
 .direction { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
-.direction button { background: #ddd; color: #333; }
+.direction button { background: #ddd; color: #333; flex: 1; }
 .direction button.active { background: #1F4E79; color: white; }
 table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 12px; overflow: hidden; }
 th, td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
 th { background: #1F4E79; color: white; }
-.rec { margin-top: 20px; padding: 15px; background: #FFEB9C; border-radius: 12px; font-weight: bold; text-align: center; }
+.rec { margin-top: 20px; padding: 15px; background: #FFEB9C; border-radius: 12px; font-weight: bold; text-align: center; font-size: 16px; }
 </style>
 </head>
 <body>
@@ -29,8 +29,12 @@ th { background: #1F4E79; color: white; }
   <label>Target Distance (mm)</label>
   <div class="value" id="targetDisplay">44</div>
   <div class="buttons">
-    <button onclick="changeTarget(-1)">−</button>
-    <button onclick="changeTarget(1)">+</button>
+    <button onclick="changeTarget(-10)">-10</button>
+    <button onclick="changeTarget(-5)">-5</button>
+    <button onclick="changeTarget(-1)">-1</button>
+    <button onclick="changeTarget(1)">+1</button>
+    <button onclick="changeTarget(5)">+5</button>
+    <button onclick="changeTarget(10)">+10</button>
   </div>
 </div>
 
@@ -38,8 +42,12 @@ th { background: #1F4E79; color: white; }
   <label>Wind Strength</label>
   <div class="value" id="windDisplay">2</div>
   <div class="buttons">
-    <button onclick="changeWind(-1)">−</button>
-    <button onclick="changeWind(1)">+</button>
+    <button onclick="changeWind(-10)">-10</button>
+    <button onclick="changeWind(-5)">-5</button>
+    <button onclick="changeWind(-1)">-1</button>
+    <button onclick="changeWind(1)">+1</button>
+    <button onclick="changeWind(5)">+5</button>
+    <button onclick="changeWind(10)">+10</button>
   </div>
   <div class="direction">
     <button id="withBtn" class="active" onclick="setDirection(1)">With You (+)</button>
@@ -59,7 +67,7 @@ th { background: #1F4E79; color: white; }
 <script>
 let target = 44;
 let windAbs = 2;
-let direction = 1; // 1 = with, -1 = against
+let direction = 1;
 
 function updateDisplay() {
   document.getElementById('targetDisplay').textContent = target;
@@ -101,11 +109,10 @@ function calculate() {
     document.getElementById(f.id + 'Tweak').textContent = tweak;
   });
 
-  // Recommendation logic
   let preferred = 'Small';
   if (target > 96) preferred = 'Full';
   else if (target > 48) preferred = 'Medium';
-  if (direction === -1 && windAbs > 10 && target <= 48) preferred = 'Medium'; // strong headwind
+  if (direction === -1 && windAbs > 10 && target <= 48) preferred = 'Medium';
 
   const preferredId = preferred.toLowerCase() === 'full' ? 'full' : preferred.toLowerCase() === 'medium' ? 'med' : 'small';
   const angle = document.getElementById(preferredId + 'Angle').textContent;

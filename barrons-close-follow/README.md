@@ -2,13 +2,14 @@
 
 Jim's mock Barron's Investor Circle close-follow book.
 
-- **As of:** 2026-11-17 (America/Los_Angeles)
-- **Contributed:** $1,000,000
-- **Total value:** $989,863.62
-- **Gain/loss:** −$10,136.38 (−1.01%)
-- **Positions:** VEOEY, EL, IBEX, EQX, UCTT, RMD, AA, OMAB, BNTX, TTWO
-- **Cash leftovers:** $647.32
+- **As of:** 2026-11-18 (America/Los_Angeles)
+- **Contributed:** $1,100,000
+- **Total value:** $1,087,078.74
+- **Gain/loss:** −$12,921.26 (−1.17%)
+- **Positions:** VEOEY, EL, IBEX, EQX, UCTT, RMD, AA, OMAB, BNTX, TTWO, TCMD
+- **Cash leftovers:** $660.39
 
+TCMD entered at the official Nov 18 open of $25.83 (3,871 shares, cost $99,986.93, cash $13.07).
 BNTX entered at the official Nov 12 open of $86.70 (1,153 shares, cost $99,965.10, cash $34.90).
 TTWO entered at the official Nov 12 open of $232.16 (430 shares, cost $99,828.80, cash $171.20).
 

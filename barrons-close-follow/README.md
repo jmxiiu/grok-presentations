@@ -2,7 +2,7 @@
 
 Jim's mock Barron's Investor Circle close-follow book.
 
-- **As of:** 2026-11-19 (America/Los_Angeles)
+- **As of:** 2026-11-20 (America/Los_Angeles)
 - **Contributed:** $1,100,000
 - **Total value:** $1,060,677.43
 - **Gain/loss:** −$39,322.57 (−3.57%)

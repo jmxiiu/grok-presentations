@@ -2,10 +2,10 @@
 
 Jim's mock Barron's Investor Circle close-follow book.
 
-- **As of:** 2026-11-20 (America/Los_Angeles)
-- **Contributed:** $1,100,000
-- **Total value:** $1,060,677.43
-- **Gain/loss:** −$39,322.57 (−3.57%)
+- **As of:** 2026-11-23 (America/Los_Angeles)
+- **Contributed:** $1,300,000
+- **Total value:** $1,276,548.84
+- **Gain/loss:** −$23,451.16 (−1.80%)
 - **Positions:** VEOEY, EL, IBEX, EQX, UCTT, RMD, AA, OMAB, BNTX, TTWO, TCMD
 - **Cash leftovers:** $660.39
 
